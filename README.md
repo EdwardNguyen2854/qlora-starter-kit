@@ -39,6 +39,17 @@ cp .env.example .env
 ### 1. Prepare Data
 
 ```bash
+# List available datasets (built-in and HuggingFace)
+python scripts/prepare_data.py --list-datasets
+
+# Use a built-in dataset (instruction, qa, code, tech_qa)
+python scripts/prepare_data.py --dataset qa --output data/processed/train.json
+
+# Download from HuggingFace (alpaca, dolly, guanaco)
+python scripts/prepare_data.py --dataset alpaca --output data/processed/train.json
+python scripts/prepare_data.py --dataset dolly --output data/processed/train.json
+python scripts/prepare_data.py --dataset guanaco --output data/processed/train.json
+
 # Create sample data
 python scripts/prepare_data.py --create-sample
 
@@ -50,6 +61,29 @@ python scripts/prepare_data.py \
     --prompt-column prompt \
     --response-column response
 ```
+
+**Built-in Datasets:**
+
+| Dataset | Description |
+|---------|-------------|
+| `instruction` | General knowledge instruction following (10 examples) |
+| `qa` | Q&A on various topics (10 examples) |
+| `code` | Python code generation tasks (10 examples) |
+| `tech_qa` | Technical Q&A (CSV format, 10 examples) |
+
+**HuggingFace Datasets:**
+
+| Dataset | Source | Size | Disk Space |
+|---------|--------|------|------------|
+| `alpaca` | [yahma/alpaca-cleaned](https://huggingface.co/datasets/yahma/alpaca-cleaned) | ~52K | ~50 MB |
+| `dolly` | [databricks/databricks-dolly-15k](https://huggingface.co/datasets/databricks/databricks-dolly-15k) | ~15K | ~15 MB |
+| `guanaco` | [OpenAssistant/oasst1](https://huggingface.co/datasets/OpenAssistant/oasst1) | ~100K+ | ~500 MB |
+
+- **alpaca**: Cleaned version of Stanford Alpaca dataset with instruction-following examples
+- **dolly**: Databricks Dolly dataset with human-generated instruction-response pairs
+- **guanaco**: OpenAssistant conversation data formatted for assistant training
+
+> **Note:** Large datasets (alpaca, guanaco) require significant disk space and may take time to download. For testing, use a subset: `python scripts/prepare_data.py --dataset alpaca --limit 1000`.
 
 Data format (JSON):
 ```json
