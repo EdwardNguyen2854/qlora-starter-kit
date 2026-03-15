@@ -1,0 +1,62 @@
+# QLoRA Starter Kit - Default Configuration
+# Example config for fine-tuning Llama 2 7B on consumer hardware
+
+model:
+  model_name: meta-llama/Llama-2-7b-hf
+  model_family: llama
+  trust_remote_code: true
+  use_cache: false
+  torch_dtype: auto
+  device_map: auto
+
+quantization:
+  load_in_4bit: true
+  bnb_4bit_compute_dtype: float16
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_use_double_quant: true
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules:
+    - q_proj
+    - v_proj
+  bias: none
+  task_type: CAUSAL_LM
+  inference_mode: false
+
+data:
+  train_file: data/processed/train.json
+  validation_file: null
+  test_file: null
+  data_format: json
+  text_field: text
+  prompt_field: prompt
+  response_field: response
+  max_seq_length: 512
+  train_split: 0.9
+  validation_split: 0.1
+
+training:
+  output_dir: ./output/qlora-llama2-7b
+  num_train_epochs: 3
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-4
+  warmup_steps: 100
+  logging_steps: 10
+  save_steps: 100
+  eval_steps: 100
+  save_total_limit: 3
+  max_grad_norm: 0.3
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  use_peft: true
+  neftune_noise_alpha: null
+
+seed: 42
+use_wandb: false
+wandb_project: qlora-starter-kit
